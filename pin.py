@@ -27,6 +27,7 @@ for month in month_2021:
     data_month_pin = data_pin[data_pin["Datum"] == '2021-'+month]
     total_pin_month = data_month_pin["Bedrag"].sum()
 
+
     # Wisselkeors
     wisselkoers = data_wisselkoers.loc[data_wisselkoers['Datum'] == '2021' + month, 'BRL'].iloc[0]
 
@@ -41,6 +42,32 @@ for month in month_2021:
     row_onbekend = {'Datum': '2021-'+month, 'Bedrag' : onbekend_month, 'Beschrijving' : 'Onbekend via pin 2021 maand ' + month, 'Categorie':'Onbekend', 'Subcategorie': 'Pin onbekend'}
     data_month_uitgaven = data_month_uitgaven.append(row_onbekend, ignore_index = True)
     data_uitgaven_pinnen = data_uitgaven_pinnen.append(data_month_uitgaven, ignore_index = True)
+
+
+for month in month_2022:
+
+    #print('\n', month)
+    # Totaal gepind
+    data_month_pin = data_pin[data_pin["Datum"] == '2022-'+month]
+    total_pin_month = data_month_pin["Bedrag"].sum()
+
+
+    # Wisselkeors
+    wisselkoers = data_wisselkoers.loc[data_wisselkoers['Datum'] == '2022' + month, 'BRL'].iloc[0]
+
+    # Totaal uitgegeven
+    data_month_uitgaven = data_uitgaven[data_uitgaven["Datum"] == '2022-'+month]
+    for ind in data_month_uitgaven.index:
+        if np.isnan(data_month_uitgaven['Bedrag'][ind]):
+            data_month_uitgaven['Bedrag'][ind] = -1 *  data_month_uitgaven['Bedrag Oorspronkelijk'][ind] / wisselkoers
+            #a =1
+            #row["Bedrag"] = data_wisselkoers['']
+    onbekend_month = total_pin_month - data_month_uitgaven["Bedrag"].sum()
+    row_onbekend = {'Datum': '2022-'+month, 'Bedrag' : onbekend_month, 'Beschrijving' : 'Onbekend via pin 2022 maand ' + month, 'Categorie':'Onbekend', 'Subcategorie': 'Pin onbekend'}
+    data_month_uitgaven = data_month_uitgaven.append(row_onbekend, ignore_index = True)
+    print(data_month_uitgaven)
+    data_uitgaven_pinnen = data_uitgaven_pinnen.append(data_month_uitgaven, ignore_index = True)
+
 data_uitgaven_pinnen.insert(0, 'Rekening', 'Pinnen')
-print(data_uitgaven_pinnen)
+#rint(data_uitgaven_pinnen)
     #print(total_uitgaven_month)
